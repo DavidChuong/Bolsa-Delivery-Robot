@@ -1,0 +1,25 @@
+function DFS(x, y, visited, n, m, mat, dest_x, dest_y)
+    if(x == dest_x AND y == dest_y)
+        return True
+    if(x ≥ n OR y ≥ m)
+        return False
+    if(x < 0 OR y < 0)
+        return False
+    if(visited[x][y] == True)
+        return False
+    Use Ultrasonic Sensor
+        Check Front
+        Check Right
+        Check Left 
+    if(mat[x][y] == X)
+        return False
+    visited[x][y] = True
+    if (DFS(x+1, y, visited, n, m, mat,  dest_x, dest_y) == True)
+        return True
+    if (DFS(x-1, y, visited, n, m, mat,  dest_x, dest_y) == True)
+        return True
+    if (DFS(x, y+1, visited, n, m, mat,  dest_x, dest_y) == True)
+        return True
+    if (DFS(x, y-1, visited, n, m, mat,  dest_x, dest_y) == True)
+        return True
+    return False
