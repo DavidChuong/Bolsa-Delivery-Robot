@@ -1,4 +1,4 @@
-function DFS(x, y, visited, n, m, mat, dest_x, dest_y)
+function DFS(x, y, visited, n, m, mat, dest_x, dest_y) //make sure to comment your pseudocode, and variables
     if(x == dest_x AND y == dest_y)
         return True
     if(x ≥ n OR y ≥ m)
@@ -14,6 +14,8 @@ function DFS(x, y, visited, n, m, mat, dest_x, dest_y)
     if(mat[x][y] == X)
         return False
     visited[x][y] = True
+    
+    //you are doing a recursive call here, you might end up in an infinite loop
     if (DFS(x+1, y, visited, n, m, mat,  dest_x, dest_y) == True)
         return True
     if (DFS(x-1, y, visited, n, m, mat,  dest_x, dest_y) == True)
