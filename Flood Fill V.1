@@ -1,27 +1,30 @@
-function DFS(x, y, visited, n, m, mat, dest_x, dest_y) //make sure to comment your pseudocode, and variables
-    if(x == dest_x AND y == dest_y)
+//(x,y) is the original coordinate 
+//(dest_x, dest_y) is the destination coordinates
+//((n, m) is the visited coordinates
+function DFS(x, y, visited, n, m, mat, dest_x, dest_y) // setting up scenario 
+    if(x == dest_x AND y == dest_y) //If the robot is going to sastify the coordinates of the destination, then move 
         return True
-    if(x ≥ n OR y ≥ m)
+    if(x ≥ n OR y ≥ m) //If the robot only sastify one of the coordinates, then stop
         return False
-    if(x < 0 OR y < 0)
+    if(x < 0 OR y < 0) //If the robot go outside of the matrix, then stop
         return False
-    if(visited[x][y] == True)
+    if(visited[x][y] == True) //
         return False
-    Use Ultrasonic Sensor
+    Use Ultrasonic Sensor //Apply ultrasonic sensor to check for obstacle or "X"
         Check Front
         Check Right
         Check Left 
-    if(mat[x][y] == X)
+    if(mat[x][y] == X) //"X" is the obstacle and if the robot move there, then stop
         return False
     visited[x][y] = True
     
     //you are doing a recursive call here, you might end up in an infinite loop
-    if (DFS(x+1, y, visited, n, m, mat,  dest_x, dest_y) == True)
+    if (DFS(x+1, y, visited, n, m, mat,  dest_x, dest_y) == True) //move to the right to meet the destination
         return True
-    if (DFS(x-1, y, visited, n, m, mat,  dest_x, dest_y) == True)
+    if (DFS(x-1, y, visited, n, m, mat,  dest_x, dest_y) == True) //move to the left to meet the destination
         return True
-    if (DFS(x, y+1, visited, n, m, mat,  dest_x, dest_y) == True)
+    if (DFS(x, y+1, visited, n, m, mat,  dest_x, dest_y) == True) //move up to meet the destination
         return True
-    if (DFS(x, y-1, visited, n, m, mat,  dest_x, dest_y) == True)
+    if (DFS(x, y-1, visited, n, m, mat,  dest_x, dest_y) == True) //move down to meet the destination
         return True
     return False
