@@ -1,0 +1,200 @@
+#include <Servo.h>          
+#include <NewPing.h>        
+
+//L298N motor control pins
+const int LeftMotorForward1 = 6;
+const int LeftMotorBackward1 = 7;
+const int RightMotorForward1 = 5;
+const int RightMotorBackward1 = 4;
+const int LeftMotorForward2 = 8;
+const int LeftMotorBackward2 = 9;
+const int RightMotorForward2 = 10;
+const int RightMotorBackward2 = 11;
+
+//sensor pins
+#define trig_pin A1 //analog input 1
+#define echo_pin A2 //analog input 2
+
+#define maximum_distance 200
+boolean goesForward = false;
+int distance = 100;
+
+NewPing sonar(trig_pin, echo_pin, maximum_distance); //sensor function
+Servo servo_motor; 
+
+void setup(){
+
+  pinMode(RightMotorForward1, OUTPUT);
+  pinMode(LeftMotorForward1, OUTPUT);
+  pinMode(LeftMotorBackward1, OUTPUT);
+  pinMode(RightMotorBackward1, OUTPUT);
+  pinMode(RightMotorForward2, OUTPUT);
+  pinMode(LeftMotorForward2, OUTPUT);
+  pinMode(LeftMotorBackward2, OUTPUT);
+  pinMode(RightMotorBackward2, OUTPUT);
+  
+  servo_motor.attach(9); //our servo pin
+
+  servo_motor.write(115);
+  delay(2000);
+  distance = readPing();
+  delay(100);
+  distance = readPing();
+  delay(100);
+  distance = readPing();
+  delay(100);
+  distance = readPing();
+  delay(100);
+}
+
+void loop(){
+
+  int distanceRight = 0;
+  int distanceLeft = 0;
+  delay(50);
+
+  if (distance <= 20){
+    moveStop();
+    delay(300);
+    moveBackward();
+    delay(400);
+    moveStop();
+    delay(300);
+    distanceRight = lookRight();
+    delay(300);
+    distanceLeft = lookLeft();
+    delay(300);
+
+    if (distance >= distanceLeft){
+      turnRight();
+      moveStop();
+    }
+    else{
+      turnLeft();
+      moveStop();
+    }
+  }
+  else{
+    moveForward(); 
+  }
+    distance = readPing();
+}
+
+int lookRight(){  
+  servo_motor.write(50);
+  delay(500);
+  int distance = readPing();
+  delay(100);
+  servo_motor.write(115);
+  return distance;
+}
+
+int lookLeft(){
+  servo_motor.write(170);
+  delay(500);
+  int distance = readPing();
+  delay(100);
+  servo_motor.write(115);
+  return distance;
+  delay(100);
+}
+
+int readPing(){
+  delay(70);
+  int cm = sonar.ping_cm();
+  if (cm==0){
+    cm=250;
+  }
+  return cm;
+}
+
+void moveStop(){
+  
+  digitalWrite(RightMotorForward1, LOW);
+  digitalWrite(LeftMotorForward1, LOW);
+  digitalWrite(RightMotorBackward1, LOW);
+  digitalWrite(LeftMotorBackward1, LOW);
+  digitalWrite(RightMotorForward2, LOW);
+  digitalWrite(LeftMotorForward2, LOW);
+  digitalWrite(RightMotorBackward2, LOW);
+  digitalWrite(LeftMotorBackward2, LOW);
+}
+
+void moveForward(){
+
+  if(!goesForward){
+
+    goesForward=true;
+    
+    digitalWrite(LeftMotorForward1, HIGH);
+    digitalWrite(RightMotorForward1, HIGH);
+    digitalWrite(LeftMotorBackward1, LOW);
+    digitalWrite(RightMotorBackward1, LOW); 
+    digitalWrite(LeftMotorForward2, HIGH);
+    digitalWrite(RightMotorForward2, HIGH);
+    digitalWrite(LeftMotorBackward2, LOW);
+    digitalWrite(RightMotorBackward2, LOW); 
+  }
+}
+
+void moveBackward(){
+
+  goesForward=false;
+
+  digitalWrite(LeftMotorBackward1, HIGH);
+  digitalWrite(RightMotorBackward1, HIGH);
+  digitalWrite(LeftMotorForward1, LOW);
+  digitalWrite(RightMotorForward1, LOW);
+  digitalWrite(LeftMotorBackward2, HIGH);
+  digitalWrite(RightMotorBackward2, HIGH);
+  digitalWrite(LeftMotorForward2, LOW);
+  digitalWrite(RightMotorForward2, LOW);
+  
+}
+
+void turnRight(){
+
+  digitalWrite(LeftMotorForward1, HIGH);
+  digitalWrite(RightMotorBackward1, HIGH);
+  digitalWrite(LeftMotorBackward1, LOW);
+  digitalWrite(RightMotorForward1, LOW);
+  digitalWrite(LeftMotorForward2, HIGH);
+  digitalWrite(RightMotorBackward2, HIGH);
+  digitalWrite(LeftMotorBackward2, LOW);
+  digitalWrite(RightMotorForward2, LOW);
+  
+  delay(500);
+  
+  digitalWrite(LeftMotorForward1, HIGH);
+  digitalWrite(RightMotorForward1, HIGH);
+  digitalWrite(LeftMotorBackward1, LOW);
+  digitalWrite(RightMotorBackward1, LOW);
+  digitalWrite(LeftMotorForward2, HIGH);
+  digitalWrite(RightMotorForward2, HIGH);
+  digitalWrite(LeftMotorBackward2, LOW);
+  digitalWrite(RightMotorBackward2, LOW);
+  
+  
+}
+
+void turnLeft(){
+
+  digitalWrite(LeftMotorBackward1, HIGH);
+  digitalWrite(RightMotorForward1, HIGH);
+  digitalWrite(LeftMotorForward1, LOW);
+  digitalWrite(RightMotorBackward1, LOW);
+  digitalWrite(LeftMotorBackward2, HIGH);
+  digitalWrite(RightMotorForward2, HIGH);
+  digitalWrite(LeftMotorForward2, LOW);
+  digitalWrite(RightMotorBackward2, LOW);
+
+  delay(500);
+  
+  digitalWrite(LeftMotorForward1, HIGH);
+  digitalWrite(RightMotorForward1, HIGH);
+  digitalWrite(LeftMotorBackward1, LOW);
+  digitalWrite(RightMotorForward1, LOW);
+  digitalWrite(LeftMotorForward2, HIGH);
+  digitalWrite(RightMotorForward2, HIGH);
+  digitalWrite(LeftMotorBackward2, LOW);
+  digitalWrite(RightMotorForward2, LOW);
