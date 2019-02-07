@@ -7,7 +7,7 @@
 #define RIGHT_OUTPUT_A 5 //right motor A
 #define RIGHT_OUTPUT_B 10 //right motor B
 
-double LeftInput, RightInput, LeftOutput, RightOutput, error;
+double LeftInput, RightInput, LeftOutput, RightOutput;
 double Kp = 0, Ki = 0, Kd = 0;
 
 void setup() {
