@@ -17,7 +17,7 @@ void setup() {
 
 void loop() {
   //if left is greater than right, we reduce it to the speed of the right
-  if (LeftInput > RightInput) {
+  while (LeftInput > RightInput) {
     PID myPID(&LeftInput, &LeftOutput, &RightInput, Kp, Ki, Kd, DIRECT);
     myPID.SetMode(AUTOMATIC); //intialize PID
     myPID.Compute();
@@ -26,7 +26,7 @@ void loop() {
   }
 
   //if right is greater than left, we reduce it to the speed of the left
-  else if (LeftInput < RightInput) {
+  while (LeftInput < RightInput) {
     PID myPID(&RightInput, &RightOutput, &LeftInput, Kp, Ki, Kd, DIRECT);
     myPID.SetMode(AUTOMATIC); //intialize PID
     myPID.Compute();
