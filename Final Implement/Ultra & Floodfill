@@ -22,7 +22,25 @@ int distance = 100;
 NewPing sonar(trig_pin, echo_pin, maximum_distance); //sensor function
 Servo servo_motor; 
 
+//PID code
+
+#include <PID_v1.h>
+
+#define LEFT_INPUT 1 //left encoder 
+#define RIGHT_INPUT 2 //right encoder 
+#define LEFT_OUTPUT_A 40 //left motor A
+#define LEFT_OUTPUT_B 41 //left motor B
+#define RIGHT_OUTPUT_A 42 //right motor A
+#define RIGHT_OUTPUT_B 43 //right motor B
+
+double LeftInput, RightInput, LeftOutput, RightOutput;
+double Kp = 0, Ki = 0, Kd = 0;
+
+
 void setup(){
+
+  LeftInput = analogRead(LEFT_INPUT); //read left encoder
+  RightInput = analogRead(RIGHT_INPUT); //read right encoder
 
   pinMode(RightMotorForward1, OUTPUT);
   pinMode(LeftMotorForward1, OUTPUT);
@@ -229,4 +247,24 @@ void turnLeft(){
   digitalWrite(LeftMotorForward2, LOW);
   digitalWrite(RightMotorBackward2, LOW);
   digitalWrite(LeftMotorBackward2, LOW);
+}
+
+void PIDstraight() {
+  //if left is greater than right, we reduce it to the speed of the right
+  while (LeftInput > RightInput) {
+    PID myPID(&LeftInput, &LeftOutput, &RightInput, Kp, Ki, Kd, DIRECT);
+    myPID.SetMode(AUTOMATIC); //intialize PID
+    myPID.Compute();
+    analogWrite(LEFT_OUTPUT_A, LeftOutput);
+    analogWrite(LEFT_OUTPUT_B, LeftOutput);
+  }
+
+  //if right is greater than left, we reduce it to the speed of the left
+  while (LeftInput < RightInput) {
+    PID myPID(&RightInput, &RightOutput, &LeftInput, Kp, Ki, Kd, DIRECT);
+    myPID.SetMode(AUTOMATIC); //intialize PID
+    myPID.Compute();
+    analogWrite(RIGHT_OUTPUT_A, RightOutput);
+    analogWrite(RIGHT_OUTPUT_B, RightOutput);
+  }
 }
