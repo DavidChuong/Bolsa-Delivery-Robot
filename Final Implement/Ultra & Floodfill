@@ -15,6 +15,9 @@ const int RightMotorBackward2 = 11;
 #define trig_pin A1 //analog input 1
 #define echo_pin A2 //analog input 2
 
+//Button pins
+#define BUTTON 
+
 //Setting up the maximum distance
 #define maximum_distance 200
 boolean goesForward = false;
