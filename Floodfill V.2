@@ -1,6 +1,29 @@
-void function DFS(int x,int y, visited, int dest_x, int dest_y)
+int X == (distance <= 25)
+//(x,y) is the original coordinate 
+//(dest_x, dest_y) is the destination coordinates
+void function DFS(int x,int y, visited, int dest_x, int dest_y) // setting up scenario
 {
-	if(x == dest_x & y == dest_y) 
-	{return true}
-  If 
+	if(x == dest_x & y == dest_y) //If the robot is going to satisfy the coordinates of the destination, then move 
+		{return True};
   
+    	if(x >= desti_x || y >= m) //If the robot only satisfy one of the coordinates, then stop
+        	{return False};
+	
+    	if(x < 0 || y < 0) //If the robot go outside of the matrix, then stop
+        	{return False};
+	
+  	if(visited [x][y] == X) //"X" is the obstacle and if the robot move there, then stop
+        	{return False};
+   	
+    	if (DFS(x+1 == dest_x & y == dest_y) == True) //move to the right to meet the destination
+        	{return True};
+   	if (DFS(x-1 == dest_x & y == dest_y) == True) //move to the left to meet the destination
+       		{return True};
+    	if (DFS(x == dest_x & y+1 == dest_y) == True) //move down to meet the destination
+        	{return True};
+   	if (DFS(x == dest_x & y-1 == dest_y) == True) //move up to meet the destination
+        	{return True};
+	else {
+	return False;
+	}
+}
