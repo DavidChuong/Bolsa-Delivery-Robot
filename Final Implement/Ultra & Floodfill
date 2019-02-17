@@ -113,7 +113,7 @@ void function DFS(int x,int y, visited, int dest_x, int dest_y) // setting up sc
 	if(x == dest_x & y == dest_y) //If the robot is going to sastify the coordinates of the destination, then move 
 		{return True};
   
-    	if(x >= n || y >= m) //If the robot only sastify one of the coordinates, then stop
+    	if(x >= dest_x || y >= dest_y) //If the robot only sastify one of the coordinates, then stop
         	{return False};
 	
     	if(x < 0 || y < 0) //If the robot go outside of the matrix, then stop
