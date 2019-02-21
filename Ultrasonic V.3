@@ -2,10 +2,10 @@
 #include <NewPing.h>        
 
 //L298N motor control pins
-const int LeftMotorForward1 = 6;
-const int LeftMotorBackward1 = 7;
-const int RightMotorForward1 = 5;
-const int RightMotorBackward1 = 4;
+const int LeftMotorForward1 = 26;
+const int LeftMotorBackward1 = 28;
+const int RightMotorForward1 = 24;
+const int RightMotorBackward1 = 22;
 const int LeftMotorForward2 = 8;
 const int LeftMotorBackward2 = 9;
 const int RightMotorForward2 = 10;
@@ -33,7 +33,7 @@ void setup(){
   pinMode(LeftMotorBackward2, OUTPUT);
   pinMode(RightMotorBackward2, OUTPUT);
   
-  servo_motor.attach(9); //our servo pin
+  servo_motor.attach(13); //our servo pin
 
   servo_motor.write(115);
   delay(2000);
@@ -198,3 +198,4 @@ void turnLeft(){
   digitalWrite(RightMotorForward2, HIGH);
   digitalWrite(LeftMotorBackward2, LOW);
   digitalWrite(RightMotorForward2, LOW);
+  }
