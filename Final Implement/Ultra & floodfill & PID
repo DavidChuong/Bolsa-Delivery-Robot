@@ -74,7 +74,7 @@ void loop(){
   int distanceLeft = 0;
   delay(50);
 
-  if (distance <= 25){ //If the car approach an obstacle within 25 cm
+  if (distance <= 50){ //If the car approach an obstacle within 25 cm
     moveStop(); //Stop
     delay(300);
     moveBackward(); //Go backward
