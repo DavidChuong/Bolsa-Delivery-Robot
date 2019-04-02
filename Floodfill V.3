@@ -225,3 +225,112 @@ void rightturn()
   digitalWrite(13,LOW);
   delay(1000);
 }
+
+void setup()
+{
+  //ultrasonic sensors setup
+  pinMode (trigPinf, OUTPUT);
+  pinMode (echoPinf, INPUT);
+  pinMode (trigPinr, OUTPUT);
+  pinMode (echoPinr, INPUT);
+  pinMode (trigPinl, OUTPUT);
+  pinMode (echoPinl, INPUT);
+
+  pinMode (9,OUTPUT);
+  pinMode (10,OUTPUT);
+  pinMode (11,OUTPUT);
+  pinMode (12,OUTPUT);
+
+  Serial.begin(9600);
+
+  //dir[0] = 0;
+}
+
+void loop()
+{
+  if (nlr==7)
+  {
+    found=true;  //Reached the end
+    for(int i=0;i<=2;i++){Serial.print(dir[i]);}
+    i=-1;j=0;nlr=0;  //Back to start again
+
+    //Stops the bot for 30 seconds after reaching to the end. 
+    digitalWrite(9,LOW);
+    digitalWrite(10,LOW);
+    digitalWrite(11,LOW);
+    digitalWrite(12,LOW);
+    delay(30000);
+  }
+
+  //Front,right and left distances.
+  float fdist;
+  float rdist;
+  float ldist;
+
+  //Front, right, and left travel time in echoPin
+  float fduration;
+  float rduration;
+  float lduration;
+
+  //Arrays which stores the value of five durations...The robot will take only the median value(after sorting) with error bearing capacity of 40%
+  float fdur[5]; 
+  float rdur[5];
+  float ldur[5];
+  float ldista[5];
+
+  //apply for front ultrasonic sensor
+  for(int i=0;i<=4;i++)
+  {
+    digitalWrite(trigPinf,LOW);  //clearing the TrigPin
+    delayMicroseconds(5);
+    digitalWrite(trigPinf,HIGH); 
+    delayMicroseconds(10);
+    digitalWrite(trigPinf,LOW);
+
+    fdur[i] = pulseIn(echoPinf, HIGH);  //returns the time for which the wave travelled
+  }
+
+  fduration = middleval(fdur);
+  fdist = fduration*0.0344/2;    //distance of the wall in the forward direction
+
+  //Apply for right ultrasonic sensor
+  for(int i=0;i<=4;i++)
+  {    
+    digitalWrite(trigPinr,LOW); 
+    delayMicroseconds(5);
+    digitalWrite(trigPinr,HIGH); 
+    delayMicroseconds(10);
+    digitalWrite(trigPinr,LOW);
+
+    rdur[i] = pulseIn(echoPinr, HIGH);
+  }
+  
+  rduration = middleval(rdur);
+  rdist = rduration*0.0344/2;    //distance of the wall on its right side.
+
+  //Apply for left ultrasonic sensor
+  for(int i=0;i<=4;i++)
+  {    
+    digitalWrite(trigPinl,LOW); 
+    delayMicroseconds(5);
+    digitalWrite(trigPinl,HIGH); 
+    delayMicroseconds(10);
+    digitalWrite(trigPinl,LOW);
+
+    ldur[i] = pulseIn(echoPinl, HIGH);
+  }
+  
+  lduration = middleval(ldur);
+  ldist = lduration*0.0344/2;    //distance of the wall on its left side.
+
+  if((fdist>=125)||(rdist>=150)||(ldist>=400)) {return;} //Cancelling out any error values...goest back to void loop().
+
+//Setting up the booleans.
+  fsensor = false;
+  rsensor = false;
+  lsensor = false;
+
+  if(rdist<=righthold) rsensor = true;
+  if(ldist<=lefthold) lsensor = true;
+  if(fdist<=fronthold) fsensor = true;
+}
