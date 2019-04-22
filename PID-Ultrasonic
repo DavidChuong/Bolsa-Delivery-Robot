@@ -1,0 +1,78 @@
+#inlude <PID_v1.h>
+#inldue <NewPing.n>
+#include <Servo.h>
+
+#define trig_pinl A4
+#define echo_pinl A5
+
+int distance = 100;
+
+int angle = 0;
+
+double Kp=100, Ki=0, Kd=0;//change the value
+
+double SETPOINT, INPUT, OUTPUT;
+
+servo servo_motor 
+
+void setup(){
+
+pinMode (trig_pinl, INPUT);
+pinMode (echo_pinl, OUTPUT);
+pinMode (servo.motor, OUTPUT);
+
+servo_motor.attach(5);
+servo_motor.write(90);
+
+  delay(2000);
+  distance = readPingl();
+  delay(100);
+  distance = readPingl();
+  delay(100);
+  distance = readPingl();
+  delay(100);
+  distance = readPingl();
+  delay(100);
+
+}
+
+void loop(){
+
+distance = readpingl();
+
+while(distance < 25){
+servo_motor.write(100);
+}
+
+while(distance > 25){
+servo_motor.write(80);
+}
+
+int readPingl(){ //Variable for reading from ultrasonic sensor
+
+    delay(100);                 // Wait 100ms between pings (about 20 pings/sec). 29ms should be the shortest delay between pings.
+  int cm = sonar.ping_cm();   //Send ping, get ping distance in centimeters (cm).
+  if (cm==0)
+  {
+    cm=250;
+  }
+  return cm;
+  
+long dur;
+ digitalWrite(trig_pinl, LOW);
+ delayMicroseconds(5); // delays are required for a succesful sensor operation.
+ digitalWrite(trig_pinl, HIGH);
+ delayMicroseconds(10); //this delay is required as well!
+ digitalWrite(trig_pinl, LOW);
+ dur = pulseIn(echo_pinl, HIGH);
+ return (dur/58);// convert the distance to centimeters.
+}
+
+int lookLeft(){ // Variable for looking on the left side
+
+  delay(500);
+  int distance = readPingl();
+  delay(100);
+  return distance;
+  delay(100);
+}
