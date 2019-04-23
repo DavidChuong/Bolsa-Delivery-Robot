@@ -59,6 +59,27 @@ servo_motor.write(90);
   delay(100);
   distance = readPingf();
   delay(100);
+  
+  delay(2000);
+  distance = readPingl():
+  delay(100);
+  distance = readPingl();
+  delay(100);
+  distance = readPingl();
+  delay(100);
+  distance = readPingl();
+  delay(100);
+  
+  
+  delay(2000);
+  distance = readPingr();
+  delay(100);
+  distance = readPingr();
+  delay(100);
+  distance = readPingr();
+  delay(100);
+  distance = readPingr();
+  delay(100);
 }
 
 void loop(){
