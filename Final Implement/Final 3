@@ -122,6 +122,7 @@ analogWrite(servo_motor, Output);
   }
   else{
     moveForward(); //Other than that, go forward
+    delay(1000);
   }
     distance = readPingf(); //base upon ultrasonic sensor
 }
