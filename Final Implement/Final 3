@@ -1,4 +1,4 @@
-#inlude <PID_v1.h>
+#include <PID_v1.h>
 #include <Servo.h>
 #include <NewPing.h>        
 
@@ -23,11 +23,11 @@ int distance = 100;
 
 NewPing sonar(trig_pinf, echo_pinf, maximum_distance); //sensor function
 
-Servo servo_motor;
+Servo myServo;
 
 int angle = 0;
 
-double Kp=100, Ki=0, Kd=0;//change the value
+double Kp=1, Ki=0, Kd=0;//change the value
 
 double Target, Input, Output;
 PID myPID(&Input, &Output, &Target, Kp, Ki, Kd, DIRECT);
@@ -41,10 +41,10 @@ void setup(){
   pinMode(LeftMotorBackward2, OUTPUT);
   pinMode(RightMotorBackward2, OUTPUT);
   
-servo_motor.attach(5);
-servo_motor.write(90);
+myServo.attach(5);
+myServo.write(90);
 
- Input = analogRead(readpingl());
+ Input = analogRead(readPingl());
   Target = 25;
   
   myPID.SetMode(AUTOMATIC);
@@ -60,41 +60,19 @@ servo_motor.write(90);
   distance = readPingf();
   delay(100);
   
-  delay(2000);
-  distance = readPingl():
-  delay(100);
-  distance = readPingl();
-  delay(100);
-  distance = readPingl();
-  delay(100);
-  distance = readPingl();
-  delay(100);
-  
-  
-  delay(2000);
-  distance = readPingr();
-  delay(100);
-  distance = readPingr();
-  delay(100);
-  distance = readPingr();
-  delay(100);
-  distance = readPingr();
-  delay(100);
 }
-
 void loop(){
 
   int distanceRight = 0;
   int distanceLeft = 0;
   delay(50);
   
-  
-distance = readpingl();
-Input = analogRead(readpingl());
+ 
+Input = analogRead(readPingl());
 
 while(Input < 25 || Input > 25){
 myPID.Compute();
-analogWrite(servo_motor, Output);
+myServo.write(Output);
 }
 
   if (distance <= 25){ //If the car approach an obstacle within 25 cm
@@ -121,8 +99,8 @@ analogWrite(servo_motor, Output);
     }
   }
   else{
+    myServo.write(90);
     moveForward(); //Other than that, go forward
-    delay(1000);
   }
     distance = readPingf(); //base upon ultrasonic sensor
 }
@@ -212,7 +190,7 @@ void moveBackward(){ //Function for each wheel when moving backward
 
   goesForward=false;
   
-  servo_motor.write(90);
+  myServo.write(90);
 
 
   digitalWrite(LeftMotorBackward2, HIGH);
@@ -228,8 +206,6 @@ void moveForward(){ //Function for each wheel when moving forward
 
     goesForward=true;
     
-    servo_motor.write(90);
-    
     digitalWrite(LeftMotorForward2, HIGH);
     digitalWrite(RightMotorForward2, HIGH);
     digitalWrite(LeftMotorBackward2, LOW);
@@ -239,7 +215,7 @@ void moveForward(){ //Function for each wheel when moving forward
 
 void turnLeft(){ //Function for each wheel when turning left
 
-  servo_motor.write(120);
+  myServo.write(120);
   
   digitalWrite(LeftMotorBackward2, LOW);
   digitalWrite(RightMotorForward2, HIGH);
@@ -257,7 +233,7 @@ void turnLeft(){ //Function for each wheel when turning left
   
   void turnRight(){ //Function for each wheel when turning right
 
-  servo_motor.write(60);
+  myServo.write(60);
   digitalWrite(LeftMotorForward2, HIGH);
   digitalWrite(RightMotorBackward2, LOW);
   digitalWrite(LeftMotorBackward2, LOW);
@@ -280,7 +256,3 @@ void turnLeft(){ //Function for each wheel when turning left
   digitalWrite(RightMotorBackward2, LOW);
   digitalWrite(LeftMotorBackward2, LOW);
 }
-
-
-
-//End of floodfill code*/
