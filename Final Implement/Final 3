@@ -71,17 +71,14 @@ void loop(){
   int distanceRight = 0;
   int distanceLeft = 0;
   delay(50);
-  
-If (millis()<stop1){
  
 Input = analogRead(readPingl());
-
-//while(Input < 25 || Input > 25){
 while(Input >= 0 && Input <= 50 && Input != 25){
 myPID.Compute();
 myServo.write(Output);
 }
 
+if (millis()<stop1){
   if (distance <= 25){ //If the car approach an obstacle within 25 cm
     moveStop(); //Stop
     delay(300);
@@ -113,6 +110,7 @@ myServo.write(Output);
     }
     else {
     moveStop();
+    
     }
 }
 
