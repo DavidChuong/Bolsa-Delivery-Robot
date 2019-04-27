@@ -29,7 +29,7 @@ int angle = 0;
 
 int ANGLE = 90;
 
-double Kp=1, Ki=0, Kd=0;//change the value
+double Kp=0.1, Ki=0, Kd=0;//change the value
 
 double Target, Input, Output;
 PID myPID(&Input, &Output, &Target, Kp, Ki, Kd, DIRECT);
