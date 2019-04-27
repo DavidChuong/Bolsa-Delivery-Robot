@@ -27,6 +27,8 @@ Servo myServo;
 
 int angle = 0;
 
+int ANGLE = 90;
+
 double Kp=1, Ki=0, Kd=0;//change the value
 
 double Target, Input, Output;
@@ -42,7 +44,7 @@ void setup(){
   pinMode(RightMotorBackward2, OUTPUT);
   
 myServo.attach(5);
-myServo.write(90);
+myServo.write(ANGLE);
 
  Input = analogRead(readPingl());
   Target = 25;
@@ -70,7 +72,8 @@ void loop(){
  
 Input = analogRead(readPingl());
 
-while(Input < 25 || Input > 25){
+//while(Input < 25 || Input > 25){
+while(Input >= 0 && Input <= 50 && Input != 25){
 myPID.Compute();
 myServo.write(Output);
 }
@@ -99,7 +102,7 @@ myServo.write(Output);
     }
   }
   else{
-    myServo.write(90);
+    myServo.write(ANGLE);
     moveForward(); //Other than that, go forward
   }
     distance = readPingf(); //base upon ultrasonic sensor
@@ -190,7 +193,7 @@ void moveBackward(){ //Function for each wheel when moving backward
 
   goesForward=false;
   
-  myServo.write(90);
+  myServo.write(ANGLE);
 
 
   digitalWrite(LeftMotorBackward2, HIGH);
