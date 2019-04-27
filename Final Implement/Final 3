@@ -27,7 +27,9 @@ Servo myServo;
 
 int angle = 0;
 
-int ANGLE = 90;
+int ANGLE = 85;
+
+long int stop1;
 
 double Kp=0.1, Ki=0, Kd=0;//change the value
 
@@ -51,6 +53,7 @@ myServo.write(ANGLE);
   
   myPID.SetMode(AUTOMATIC);
 
+  stop1=millis()+5000;
 
   delay(2000);
   distance = readPingf();
@@ -69,6 +72,7 @@ void loop(){
   int distanceLeft = 0;
   delay(50);
   
+If (millis()<stop1){
  
 Input = analogRead(readPingl());
 
@@ -106,6 +110,10 @@ myServo.write(Output);
     moveForward(); //Other than that, go forward
   }
     distance = readPingf(); //base upon ultrasonic sensor
+    }
+    else {
+    moveStop();
+    }
 }
 
 int readPingf(){ //Variable for reading from ultrasonic sensor
