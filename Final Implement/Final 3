@@ -65,18 +65,15 @@ myServo.write(ANGLE);
 stop1=millis()+5000;
 }
 void loop(){
-
   int distanceRight = 0;
   int distanceLeft = 0;
   delay(50);
- 
 //************* PID CODE ******************
 Input = analogRead(readPingl());
 while(Input >= 0 && Input <= 50 && Input != 25){
 myPID.Compute();
 myServo.write(Output);
 }
-
 if (millis()<stop1){ // Within the 5 seconds
   if (distance <= 25){ //If the car approach an obstacle within 25 cm
     moveStop(); //Stop
@@ -89,7 +86,6 @@ if (millis()<stop1){ // Within the 5 seconds
     delay(300);
     distanceLeft = lookLeft(); // Look on the left side
     delay(300);
-
     if (distance >= distanceLeft){ //If there is obstacle on the left side, turn right
       turnRight();// turn right
       turnLeft();// turn left
@@ -109,7 +105,6 @@ if (millis()<stop1){ // Within the 5 seconds
     }
     else { //After 5 second, stop the car
     moveStop();
-    
     }
 }
 
