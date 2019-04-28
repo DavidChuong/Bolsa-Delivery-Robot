@@ -72,13 +72,14 @@ void loop(){
   int distanceLeft = 0;
   delay(50);
  
+//************* PID CODE ******************
 Input = analogRead(readPingl());
 while(Input >= 0 && Input <= 50 && Input != 25){
 myPID.Compute();
 myServo.write(Output);
 }
 
-if (millis()<stop1){
+if (millis()<stop1){ // Within the 5 seconds
   if (distance <= 25){ //If the car approach an obstacle within 25 cm
     moveStop(); //Stop
     delay(300);
@@ -92,23 +93,23 @@ if (millis()<stop1){
     delay(300);
 
     if (distance >= distanceLeft){ //If there is obstacle on the left side, turn right
-      turnRight();
-      turnLeft();
-      moveStop();
+      turnRight();// turn right
+      turnLeft();// turn left
+      moveStop(); // stop the car
     }
     else{
       turnLeft(); //Other than that, turn left
-      turnRight();
+      turnRight(); // turn right
       moveStop();
     }
   }
   else{
-    myServo.write(ANGLE);
+    myServo.write(90); // turn wheels straight
     moveForward(); //Other than that, go forward
   }
     distance = readPingf(); //base upon ultrasonic sensor
     }
-    else {
+    else { //After 5 second, stop the car
     moveStop();
     
     }
