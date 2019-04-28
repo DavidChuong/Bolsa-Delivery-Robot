@@ -36,10 +36,6 @@ double Kp=0.01, Ki=0, Kd=0;//change the value
 double Target, Input, Output;
 PID myPID(&Input, &Output, &Target, Kp, Ki, Kd, DIRECT);
 
-int runtime = millis();
-
-int x = 0;
-
 void setup(){
 
 //Setting up the motor function
@@ -66,13 +62,15 @@ myServo.write(ANGLE);
   delay(100);
   distance = readPingf();
   delay(100);
+
+  stop1 = 5000;
 }
 void loop(){
   int distanceRight = 0;
   int distanceLeft = 0;
+  int runtime = millis();
   delay(50);
 //************* PID CODE ******************
-  stop1 = 5000;
   Input = analogRead(readPingl());
   myPID.Compute();
   myServo.write(Output);
@@ -106,8 +104,7 @@ void loop(){
       distance = readPingf(); //base upon ultrasonic sensor
     }
     //After 5 second, stop the car
-      x++;
-      runtime = millis - (5000 * x);
+      stop1 = stop1 + 5000;
       moveStop();
 }
 
