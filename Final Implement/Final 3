@@ -53,8 +53,6 @@ myServo.write(ANGLE);
   
   myPID.SetMode(AUTOMATIC);
 
-  stop1=millis()+5000;
-
   delay(2000);
   distance = readPingf();
   delay(100);
@@ -64,7 +62,7 @@ myServo.write(ANGLE);
   delay(100);
   distance = readPingf();
   delay(100);
-  
+stop1=millis()+5000;
 }
 void loop(){
 
