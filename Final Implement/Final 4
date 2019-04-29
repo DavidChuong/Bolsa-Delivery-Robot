@@ -63,18 +63,18 @@ myServo.write(ANGLE);
   distance = readPingf();
   delay(100);
 
-  stop1 = 5000;
+  stop1 = millis() +5000;
 }
 void loop(){
-  int distanceRight = 0;
-  int distanceLeft = 0;
+  int distanceRight = 100;
+  int distanceLeft = 100;
   int runtime = millis();
   delay(50);
 //************* PID CODE ******************
   Input = analogRead(readPingl());
   myPID.Compute();
   myServo.write(Output);
-    while (runtime < stop1){ // Within the 5 seconds
+    if (runtime < stop1){ // Within the 5 seconds
       if (distance <= 25){ //If the car approach an obstacle within 25 cm
         moveStop(); //Stop
         delay(300);
@@ -102,10 +102,14 @@ void loop(){
         moveForward(); //Other than that, go forward
       }
       distance = readPingf(); //base upon ultrasonic sensor
+      distanceRight = readPingr();
+      distanceLeft = readPingl();
     }
     //After 5 second, stop the car
-      stop1 = stop1 + 5000;
-      moveStop();
+    else(){
+      delay(1000);
+      stop1 = millis() +5000;
+    }
 }
 
 int readPingf(){ //Variable for reading from ultrasonic sensor
@@ -150,25 +154,25 @@ long dur;
 
 int readPingl(){ //Variable for reading from ultrasonic sensor
 
-    delay(100);                 // Wait 100ms between pings (about 20 pings/sec). 29ms should be the shortest delay between pings.
+  delay(100);                 // Wait 100ms between pings (about 20 pings/sec). 29ms should be the shortest delay between pings.
   int cm = sonar.ping_cm();   //Send ping, get ping distance in centimeters (cm).
-  if (cm==0)
-  {
+  if (cm==0){
     cm=250;
   }
   return cm;
   
-long dur;
- digitalWrite(trig_pinl, LOW);
- delayMicroseconds(5); // delays are required for a succesful sensor operation.
- digitalWrite(trig_pinl, HIGH);
- delayMicroseconds(10); //this delay is required as well!
- digitalWrite(trig_pinl, LOW);
- dur = pulseIn(echo_pinl, HIGH);
- return (dur/58);// convert the distance to centimeters.
+  long dur;
+  digitalWrite(trig_pinl, LOW);
+  delayMicroseconds(5); // delays are required for a succesful sensor operation.
+  digitalWrite(trig_pinl, HIGH);
+  delayMicroseconds(10); //this delay is required as well!
+  digitalWrite(trig_pinl, LOW);
+  dur = pulseIn(echo_pinl, HIGH);
+  return (dur/58);// convert the distance to centimeters. May have to change this return
 }
 
 
+//Maybe 
 
 int lookRight(){  // Variable for looking on the right side
 
