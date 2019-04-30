@@ -54,8 +54,10 @@ void setup(){
   pinMode(LeftMotorBackward2, OUTPUT);
   pinMode(RightMotorBackward2, OUTPUT);
   
-myServo.attach(5);
-myServo.write(ANGLE);
+  myServo.attach(5);
+  myServo.write(ANGLE);
+
+  Serial.begin (9600);
 
   Input = analogRead(readPingl());
   Target = 25;
@@ -81,7 +83,14 @@ void loop(){
   delay(50);
   Input = analogRead(readPingl());
   Target = 25;
-//************* PID CODE ******************
+
+/******************Serialcode***********/
+  Serial.print(readPingl());
+  Serial.print(" - ");
+  Serial.print(readPingf());
+  Serial.print(" - ");
+  Serial.println(readPingr());
+/************* PID CODE ******************/
   while(Input >= 0 && Input <= 50 && Input != 25){
     Input = analogRead(readPingl());
     myPID.Compute();
@@ -147,7 +156,7 @@ int readPingf(){ //Variable for reading from ultrasonic sensor
 int readPingr(){ //Variable for reading from ultrasonic sensor
 
     delay(100);                 // Wait 100ms between pings (about 20 pings/sec). 29ms should be the shortest delay between pings.
-  int cm = sonar.ping_cm();   //Send ping, get ping distance in centimeters (cm).
+  int cm = sonarr.ping_cm();   //Send ping, get ping distance in centimeters (cm).
   if (cm==0)
   {
     cm=250;
@@ -167,7 +176,7 @@ long dur;
 int readPingl(){ //Variable for reading from ultrasonic sensor
 
   delay(100);                 // Wait 100ms between pings (about 20 pings/sec). 29ms should be the shortest delay between pings.
-  int cm = sonar.ping_cm();   //Send ping, get ping distance in centimeters (cm).
+  int cm = sonarl.ping_cm();   //Send ping, get ping distance in centimeters (cm).
   if (cm==0){
     cm=250;
   }
