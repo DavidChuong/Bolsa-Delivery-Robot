@@ -22,6 +22,8 @@ const int RightMotorBackward2 = 12;
 #define maximum_distancel 200
 boolean goesForward = false;
 int distance = 100;
+int distanceRight = 100;
+int distanceLeft = 100;
 
 NewPing sonar(trig_pinf, echo_pinf, maximum_distance); //sensor function
 NewPing sonarr(trig_pinr, echo_pinr, maximum_distancer); //sensor function
@@ -187,7 +189,7 @@ int readPingl(){ //Variable for reading from ultrasonic sensor
 int lookRight(){  // Variable for looking on the right side
 
   delay(500);
-  int distance = readPingr();
+  int distanceRight = readPingr();
   delay(100);
 
   return distance;
@@ -196,7 +198,7 @@ int lookRight(){  // Variable for looking on the right side
 int lookLeft(){ // Variable for looking on the left side
 
   delay(500);
-  int distance = readPingl();
+  int distanceLeft = readPingl();
   delay(100);
   return distance;
   delay(100);
