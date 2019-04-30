@@ -18,20 +18,27 @@ const int RightMotorBackward2 = 12;
 
 //Setting up the maximum distance
 #define maximum_distance 200
+#define maximum_distancer 200
+#define maximum_distancel 200
 boolean goesForward = false;
 int distance = 100;
 
 NewPing sonar(trig_pinf, echo_pinf, maximum_distance); //sensor function
+NewPing sonarr(trig_pinr, echo_pinr, maximum_distancer); //sensor function
+NewPing sonarl(trig_pinl, echo_pinl, maximum_distancel); //sensor function
+
 
 Servo myServo;
 
 int angle = 0;
 
-int ANGLE = 85;
+int ANGLE = 86;
+int ANGLEL = 121;
+int ANGLER = 51;
 
 long int stop1;
 
-double Kp=0.01, Ki=0, Kd=0;//change the value
+double Kp=0.001, Ki=0, Kd=0;//change the value
 
 double Target, Input, Output;
 PID myPID(&Input, &Output, &Target, Kp, Ki, Kd, DIRECT);
@@ -48,7 +55,7 @@ void setup(){
 myServo.attach(5);
 myServo.write(ANGLE);
 
- Input = analogRead(readPingl());
+  Input = analogRead(readPingl());
   Target = 25;
   
   myPID.SetMode(AUTOMATIC);
@@ -70,46 +77,49 @@ void loop(){
   int distanceLeft = 100;
   int runtime = millis();
   delay(50);
-//************* PID CODE ******************
   Input = analogRead(readPingl());
-  myPID.Compute();
-  myServo.write(Output);
-    if (runtime < stop1){ // Within the 5 seconds
-      if (distance <= 25){ //If the car approach an obstacle within 25 cm
-        moveStop(); //Stop
-        delay(300);
-        moveBackward(); //Go backward
-        delay(400);
-        moveStop(); //Stop
-        delay(300);
-        distanceRight = lookRight(); //Look on the right side
-        delay(300);
-        distanceLeft = lookLeft(); // Look on the left side
-        delay(300);
-        if (distance >= distanceLeft){ //If there is obstacle on the left side, turn right
-          turnRight();// turn right
-          turnLeft();// turn left
-          moveStop(); // stop the car
-        }
-        else{
-          turnLeft(); //Other than that, turn left
-          turnRight(); // turn right
-          moveStop();
-        }
+  Target = 25;
+//************* PID CODE ******************
+  while(Input >= 0 && Input <= 50 && Input != 25){
+    Input = analogRead(readPingl());
+    myPID.Compute();
+    myServo.write(Output);
+  }
+  if (runtime < stop1){ // Within the 5 seconds
+    if (distance <= 25){ //If the car approach an obstacle within 25 cm
+      moveStop(); //Stop
+      delay(300);
+      moveBackward(); //Go backwar        delay(400);
+      moveStop(); //Stop
+      delay(300);
+      distanceRight = lookRight(); //Look on the right side
+      delay(300);
+      distanceLeft = lookLeft(); // Look on the left side
+      delay(300);
+      if (distance >= distanceLeft){ //If there is obstacle on the left side, turn right
+        turnRight();// turn right
+        turnLeft();// turn left
+        moveStop(); // stop the car
       }
       else{
-        myServo.write(ANGLE); // turn wheels straight
-        moveForward(); //Other than that, go forward
+        turnLeft(); //Other than that, turn left
+        turnRight(); // turn right
+        moveStop();
       }
-      distance = readPingf(); //base upon ultrasonic sensor
-      distanceRight = readPingr();
-      distanceLeft = readPingl();
     }
-    //After 5 second, stop the car
-    else(){
-      delay(1000);
-      stop1 = millis() +5000;
+    else{
+      myServo.write(ANGLE); // turn wheels straight
+      moveForward(); //Other than that, go forward
     }
+    distance = readPingf(); //base upon ultrasonic sensor
+    distanceRight = readPingr();
+    distanceLeft = readPingl();
+  }
+  //After 5 second, stop the car
+  else{
+    delay(1000);
+    stop1 = millis() +5000;
+  }
 }
 
 int readPingf(){ //Variable for reading from ultrasonic sensor
@@ -222,7 +232,7 @@ void moveForward(){ //Function for each wheel when moving forward
 
 void turnLeft(){ //Function for each wheel when turning left
 
-  myServo.write(120);
+  myServo.write(ANGLEL);
   
   digitalWrite(LeftMotorBackward2, LOW);
   digitalWrite(RightMotorForward2, HIGH);
@@ -240,7 +250,7 @@ void turnLeft(){ //Function for each wheel when turning left
   
   void turnRight(){ //Function for each wheel when turning right
 
-  myServo.write(60);
+  myServo.write(ANGLER);
   digitalWrite(LeftMotorForward2, HIGH);
   digitalWrite(RightMotorBackward2, LOW);
   digitalWrite(LeftMotorBackward2, LOW);
