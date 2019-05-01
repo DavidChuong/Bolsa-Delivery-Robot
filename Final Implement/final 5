@@ -84,7 +84,7 @@ void loop(){
   Serial.print(" - ");
   Serial.println(readPingr());
 /************* PID CODE ******************/
-/*  while(Input >= 0 && Input <= 25 && Input != 25){
+/*  while(Input >= 0 && Input < 25 && Input != 25){
     Input = analogRead(readPingl());
     Output = error * Kp;
     myServo.write(ANGLE - Output);
@@ -92,7 +92,7 @@ void loop(){
     Serial.println(ANGLE - Output);
   }
   
-  while(Input >= 25 && Input <= 200 && Input != 25){
+  while(Input > 25 && Input <= 200 && Input != 25){
     Input = analogRead(readPingl());
     Output = error * Kp;
     myServo.write(ANGLE - Output);
