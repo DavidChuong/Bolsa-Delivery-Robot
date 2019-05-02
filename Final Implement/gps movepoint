@@ -1,0 +1,90 @@
+
+#include <TinyGPS.h>
+#include <QMC5883L.h>
+#include <Wire.h>
+QMC5883L compass;
+
+//long   lat,lon; // create variable for latitude and longitude object
+float lat = 28.5458,lon = 77.1703; // create variable for latitude and longitude object 
+SoftwareSerial gpsSerial(3,4);//rx,tx
+LiquidCrystal lcd(A0,A1,A2,A3,6,7);
+TinyGPS gps; // create gps object
+
+void setup(){
+  Serial.begin(9600); // connect serial
+  Serial.println("The GPS Received Signal:");
+  gpsSerial.begin(9600); // connect gps sensor
+  lcd.begin(16,2);
+  Wire.begin();
+
+  compass.init();
+  compass.setSamplingRate(50);
+  Serial.println("QMC5883L Compass Demo");
+  Serial.println("Turn compass in all directions to calibrate....");
+}
+ 
+void loop(){
+    while(gpsSerial.available()){ // check for gps data
+    if(gps.encode(gpsSerial.read()))// encode gps data
+    { 
+    gps.f_get_position(&lat,&lon); // get latitude and longitude
+    // display position
+    lcd.clear();
+    lcd.setCursor(1,0);
+    lcd.print("GPS Signal");
+    Serial.print("Position: ");
+    Serial.print("Latitude:");
+    Serial.print(lat,6);
+    Serial.print(";");
+    Serial.print("Longitude:");
+    Serial.println(lon,6); 
+    lcd.setCursor(1,0);
+    lcd.print("LAT:");
+    lcd.setCursor(5,0);
+    lcd.print(lat);
+    Serial.print(lat);
+    Serial.print(" ");
+    
+    lcd.setCursor(0,1);
+    lcd.print(",LON:");
+    lcd.setCursor(5,1);
+    lcd.print(lon);
+    
+   }
+  }
+  int heading = compass.readHeading();
+  if(heading==0) {
+    /* Still calibrating, so measure but don't print */
+  } else {
+    Serial.println(heading);
+    lcd.setCursor(15,0);
+    lcd.write(heading);
+  }
+  
+  String latitude = String(lat,6);
+    String longitude = String(lon,6);
+  Serial.println(latitude+";"+longitude);
+  delay(1000);
+  
+}
+
+void setWaypoint()                                            // Set up to 5 GPS waypoints
+{
+
+//if ((wpCount >= 0) && (wpCount < 50))
+if (wpCount >= 0)
+  {
+    getGPS();                                                 // get the latest GPS coordinates
+    getCompass();                                             // update latest compass heading     
+                                               
+    Home_LATarray[ac] = gps.location.lat();                   // store waypoint in an array   
+    Home_LONarray[ac] = gps.location.lng();                   // store waypoint in an array   
+
+
+    wpCount++;                                                  // increment waypoint counter
+    ac++;                                                       // increment array counter
+        
+  }         
+  else {Serial.print("Don't Bother"}
+}
+
