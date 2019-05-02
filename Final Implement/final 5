@@ -1,3 +1,4 @@
+#include <PID_v1.h>
 #include <Servo.h>
 #include <NewPing.h>        
 
@@ -19,7 +20,7 @@ const int RightMotorBackward2 = 12;
 #define maximum_distance 200
 #define maximum_distancer 200
 #define maximum_distancel 200
-boolean goesForward = false;
+
 int distance = 100;
 int distanceRight = 100;
 int distanceLeft = 100;
@@ -31,15 +32,18 @@ NewPing sonarl(trig_pinl, echo_pinl, maximum_distancel); //sensor function
 
 Servo myServo;
 
-int angle = 0;
+//int angle = 0;
 
 int ANGLE = 86;
 int ANGLEL = 121;
 int ANGLER = 51;
 
-double Kp=0.1, Ki=0, Kd=0;//change the value
 
-double Target, Input, Output, error;
+
+double Kp=0.5, Ki=0, Kd=0;//change the value
+
+double Target, Input, Output;
+PID myPID(&Input, &Output, &Target, Kp, Ki, Kd, DIRECT);
 
 void setup(){
 
@@ -57,7 +61,8 @@ void setup(){
 
   Input = analogRead(readPingl());
   Target = 25;
-  error = Target - Input;
+  
+  myPID.SetMode(AUTOMATIC);
 
   delay(2000);
   distance = readPingf();
@@ -69,10 +74,12 @@ void setup(){
   distance = readPingf();
   delay(100);
 
+
 }
 void loop(){
   int distanceRight = 100;
   int distanceLeft = 100;
+
   delay(50);
   Input = analogRead(readPingl());
   Target = 25;
@@ -84,26 +91,44 @@ void loop(){
   Serial.print(" - ");
   Serial.println(readPingr());
 /************* PID CODE ******************/
-/*  while(Input >= 0 && Input < 25 && Input != 25){
-    Input = analogRead(readPingl());
-    Output = error * Kp;
+  //if Input = target =25, it out of the loop. 
+  //if it >250 : it will be out of the while loop
+  while(Input >= 0 && Input < Target)
+  {
+    Input = analogRead(readPingl());//Read ultrasonic sensor on the left.
+    myPID.Compute();
     myServo.write(ANGLE - Output);
-    Serial.print(" - ");
-    Serial.println(ANGLE - Output);
+    Serial.print("------CASE when the robot is too CLOSE to the wall : ");
+    Serial.print(" output: ");
+    Serial.print(Output);
+    Serial.print(" ANGLE: ");
+    Serial.print(ANGLE);
+     Serial.print(" ANGLE - Output: ");
+    Serial.println(ANGLE - Output);       
+    Serial.println("------CASE turn right-------");    
+  }
+
+  while(Input >Target && Input <= 250)
+  {
+    Input = analogRead(readPingl());//Read ultrasonic sensor on the left.
+    myPID.Compute();
+    myServo.write(ANGLE + Output);
+    Serial.print("------CASE when the robot is too FAR from the wall : ");
+    Serial.print(" output: ");
+    Serial.print(Output);
+    Serial.print(" ANGLE: ");
+    Serial.print(ANGLE);
+     Serial.print(" ANGLE + Output: ");
+    Serial.println(ANGLE + Output);    
+    Serial.println("------CASE turn left-------");    
   }
   
-  while(Input > 25 && Input <= 200 && Input != 25){
-    Input = analogRead(readPingl());
-    Output = error * Kp;
-    myServo.write(ANGLE - Output);
-    Serial.print(" - ");
-    Serial.println(ANGLE - Output);
-  }
-*/
+
     if (distance <= 25){ //If the car approach an obstacle within 25 cm
       moveStop(); //Stop
       delay(300);
-      moveBackward(); //Go backward        delay(400);
+      moveBackward(); //Go backwar        
+      delay(400);
       moveStop(); //Stop
       delay(300);
       distanceRight = lookRight(); //Look on the right side
@@ -122,13 +147,11 @@ void loop(){
       }
     }
     else{
-      myServo.write(ANGLE); // turn wheels straight
       moveForward(); //Other than that, go forward
     }
     distance = readPingf(); //base upon ultrasonic sensor
     distanceRight = readPingr();
     distanceLeft = readPingl();
-  //After 5 second, stop the car
 }
 
 int readPingf(){ //Variable for reading from ultrasonic sensor
@@ -214,29 +237,28 @@ int lookLeft(){ // Variable for looking on the left side
 
 void moveBackward(){ //Function for each wheel when moving backward
 
-  goesForward=false;
+
   
   myServo.write(ANGLE);
 
 
-  digitalWrite(LeftMotorBackward2, HIGH);
-  digitalWrite(RightMotorBackward2, HIGH);
   digitalWrite(LeftMotorForward2, LOW);
   digitalWrite(RightMotorForward2, LOW);
+    
+  digitalWrite(LeftMotorBackward2, HIGH);
+  digitalWrite(RightMotorBackward2, HIGH);
+ 
   
 }
 
 void moveForward(){ //Function for each wheel when moving forward
+    myServo.write(ANGLE); // turn wheels straight
 
-  if(!goesForward){
-
-    goesForward=true;
     
     digitalWrite(LeftMotorForward2, HIGH);
     digitalWrite(RightMotorForward2, HIGH);
     digitalWrite(LeftMotorBackward2, LOW);
     digitalWrite(RightMotorBackward2, LOW); 
-  }
 }
 
 void turnLeft(){ //Function for each wheel when turning left
@@ -257,7 +279,7 @@ void turnLeft(){ //Function for each wheel when turning left
   digitalWrite(RightMotorBackward2, LOW);
   }
   
-void turnRight(){ //Function for each wheel when turning right
+  void turnRight(){ //Function for each wheel when turning right
 
   myServo.write(ANGLER);
   digitalWrite(LeftMotorForward2, HIGH);
