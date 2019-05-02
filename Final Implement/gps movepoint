@@ -4,6 +4,18 @@
 #include <Wire.h>
 QMC5883L compass;
 
+//gps code
+unsigned long Distance_To_Home;                                    // variable for storing the distance to destination
+
+int ac =0;                                                         // GPS array counter
+int wpCount = 0;                                                   // GPS waypoint counter
+double Home_LATarray[50];                                          // variable for storing the destination Latitude - Only Programmed for 5 waypoint
+double Home_LONarray[50];                                          // variable for storing the destination Longitude - up to 50 waypoints
+
+//
+int increment = 0;
+
+
 //long   lat,lon; // create variable for latitude and longitude object
 float lat = 28.5458,lon = 77.1703; // create variable for latitude and longitude object 
 SoftwareSerial gpsSerial(3,4);//rx,tx
@@ -20,7 +32,7 @@ void setup(){
   compass.init();
   compass.setSamplingRate(50);
   Serial.println("QMC5883L Compass Demo");
-  Serial.println("Turn compass in all directions to calibrate....");
+  Serial.println("Turn compass....");
 }
  
 void loop(){
@@ -53,16 +65,15 @@ void loop(){
    }
   }
   int heading = compass.readHeading();
-  if(heading==0) {
-    /* Still calibrating, so measure but don't print */
-  } else {
+  if(heading==0) {}
+  else {
     Serial.println(heading);
     lcd.setCursor(15,0);
     lcd.write(heading);
   }
   
   String latitude = String(lat,6);
-    String longitude = String(lon,6);
+  String longitude = String(lon,6);
   Serial.println(latitude+";"+longitude);
   delay(1000);
   
@@ -85,6 +96,6 @@ if (wpCount >= 0)
     ac++;                                                       // increment array counter
         
   }         
-  else {Serial.print("Don't Bother"}
+  else {Serial.print("Don't Bother Going"}
 }
 
