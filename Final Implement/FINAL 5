@@ -34,9 +34,9 @@ Servo myServo;
 
 //int angle = 0;
 
-int ANGLE = 86;
-int ANGLEL = 121;
-int ANGLER = 51;
+int ANGLE = 90;
+int ANGLEL = 125;
+int ANGLER = 55;
 
 
 
@@ -60,7 +60,7 @@ void setup(){
   Serial.begin (9600);
 
   Input = analogRead(readPingl());
-  Target = 25;
+  Target = 50;
   
   myPID.SetMode(AUTOMATIC);
 
@@ -82,7 +82,7 @@ void loop(){
 
   delay(50);
   Input = analogRead(readPingl());
-  Target = 25;
+  Target = 50;
 
 /******************Serialcode***********/
   Serial.print(readPingl());
@@ -131,16 +131,21 @@ void loop(){
       delay(400);
       moveStop(); //Stop
       delay(300);
-      distanceRight = lookRight(); //Look on the right side
+      distanceRight = readPingr(); //Look on the right side
       delay(300);
-      distanceLeft = lookLeft(); // Look on the left side
+      distanceLeft = readPingl(); // Look on the left side
       delay(300);
       if (distance >= distanceLeft){ //If there is obstacle on the left side, turn right
         turnRight();// turn right
         turnLeft();// turn left
         moveStop(); // stop the car
       }
-      else{
+      else if(distance >= distanceRight && distance >= distanceLeft){
+        moveBackward();
+        delay(300);
+        moveStop();
+      }
+      else {
         turnLeft(); //Other than that, turn left
         turnRight(); // turn right
         moveStop();
@@ -184,7 +189,7 @@ int readPingr(){ //Variable for reading from ultrasonic sensor
   }
   return cm;
 
-long dur;
+ long dur;
  digitalWrite(trig_pinr, LOW);
  delayMicroseconds(5); // delays are required for a succesful sensor operation.
  digitalWrite(trig_pinr, HIGH);
@@ -215,7 +220,7 @@ int readPingl(){ //Variable for reading from ultrasonic sensor
 
 
 //Maybe 
-
+/*
 int lookRight(){  // Variable for looking on the right side
 
   delay(500);
@@ -232,7 +237,7 @@ int lookLeft(){ // Variable for looking on the left side
   delay(100);
   return distance;
   delay(100);
-}
+}*/
 
 
 void moveBackward(){ //Function for each wheel when moving backward
