@@ -7,6 +7,8 @@ const int LeftMotorForward2 = 9;
 const int LeftMotorBackward2 = 10;
 const int RightMotorForward2 = 11;
 const int RightMotorBackward2 = 12;
+int enA = 6;
+int enB = 7;
 
 //sensor pins
 #define trig_pinf A0 //analog input 1
@@ -53,6 +55,8 @@ void setup(){
   pinMode(LeftMotorForward2, OUTPUT);
   pinMode(LeftMotorBackward2, OUTPUT);
   pinMode(RightMotorBackward2, OUTPUT);
+  pinMode(enA, OUTPUT);
+  pinMode(enB, OUTPUT);
   
   myServo.attach(5);
   myServo.write(ANGLE);
@@ -83,6 +87,8 @@ void loop(){
   delay(50);
   Input = analogRead(readPingl());
   Target = 50;
+  analogWrite(enB, 100);
+  analogWrite(enA, 100);
 
 /******************Serialcode***********/
   Serial.print(readPingl());
