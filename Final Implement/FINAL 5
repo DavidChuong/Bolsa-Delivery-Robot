@@ -1,30 +1,3 @@
-#include <PID_v1.h>
-#include <Servo.h>
-#include <NewPing.h>        
-
-
-const int LeftMotorForward2 = 9;
-const int LeftMotorBackward2 = 10;
-const int RightMotorForward2 = 11;
-const int RightMotorBackward2 = 12;
-int enA = 6;
-int enB = 7;
-
-//sensor pins
-#define trig_pinf A0 //analog input 1
-#define echo_pinf A1 //analog input 2
-#define trig_pinr A2
-#define echo_pinr A3
-#define trig_pinl A4
-#define echo_pinl A5
-
-//Setting up the maximum distance
-#define maximum_distance 200
-#define maximum_distancer 200
-#define maximum_distancel 200
-
-int distance = 100;
-int distanceRight = 100;
 int distanceLeft = 100;
 
 NewPing sonar(trig_pinf, echo_pinf, maximum_distance); //sensor function
@@ -37,8 +10,8 @@ Servo myServo;
 //int angle = 0;
 
 int ANGLE = 90;
-int ANGLEL = 125;
-int ANGLER = 55;
+int ANGLEL = 130;
+int ANGLER = 50;
 
 
 
@@ -87,8 +60,8 @@ void loop(){
   delay(50);
   Input = analogRead(readPingl());
   Target = 50;
-  analogWrite(enB, 100);
-  analogWrite(enA, 100);
+  analogWrite(enB, 150);
+  analogWrite(enA, 150);
 
 /******************Serialcode***********/
   Serial.print(readPingl());
@@ -130,30 +103,32 @@ void loop(){
   }
   
 
-    if (distance <= 25){ //If the car approach an obstacle within 25 cm
+    if (distance <= 50){ //If the car approach an obstacle within 25 cm
       moveStop(); //Stop
       delay(300);
       moveBackward(); //Go backwar        
-      delay(400);
+      delay(600);
       moveStop(); //Stop
       delay(300);
       distanceRight = readPingr(); //Look on the right side
       delay(300);
       distanceLeft = readPingl(); // Look on the left side
       delay(300);
-      if (distance >= distanceLeft){ //If there is obstacle on the left side, turn right
+      if (distanceLeft <= 50){ //If there is obstacle on the left side, turn right
         turnRight();// turn right
-        turnLeft();// turn left
+        delay(400);
+        turnLeft();
+        delay(400);
         moveStop(); // stop the car
       }
-      else if(distance >= distanceRight && distance >= distanceLeft){
-        moveBackward();
-        delay(300);
+      else if(distanceRight <= 50){
+        turnLeft(); //Other than that, turn left
+        delay(400);
+        turnRight();
+        delay(400);
         moveStop();
       }
-      else {
-        turnLeft(); //Other than that, turn left
-        turnRight(); // turn right
+      else if(50 >= distanceRight && 50 >= distanceLeft){
         moveStop();
       }
     }
@@ -181,7 +156,7 @@ int readPingf(){ //Variable for reading from ultrasonic sensor
  delayMicroseconds(10); //this delay is required as well!
  digitalWrite(trig_pinf, LOW);
  dur = pulseIn(echo_pinf, HIGH);
- return (dur/58);// convert the distance to centimeters.
+// return (dur/58);// convert the distance to centimeters.
 }
 
 
@@ -202,7 +177,6 @@ int readPingr(){ //Variable for reading from ultrasonic sensor
  delayMicroseconds(10); //this delay is required as well!
  digitalWrite(trig_pinr, LOW);
  dur = pulseIn(echo_pinr, HIGH);
- return (dur/58);// convert the distance to centimeters.
 }
 
 int readPingl(){ //Variable for reading from ultrasonic sensor
@@ -221,7 +195,7 @@ int readPingl(){ //Variable for reading from ultrasonic sensor
   delayMicroseconds(10); //this delay is required as well!
   digitalWrite(trig_pinl, LOW);
   dur = pulseIn(echo_pinl, HIGH);
-  return (dur/58);// convert the distance to centimeters. May have to change this return
+
 }
 
 
@@ -275,35 +249,43 @@ void moveForward(){ //Function for each wheel when moving forward
 void turnLeft(){ //Function for each wheel when turning left
 
   myServo.write(ANGLEL);
-  
+    
   digitalWrite(LeftMotorBackward2, LOW);
   digitalWrite(RightMotorForward2, HIGH);
   digitalWrite(LeftMotorForward2, HIGH);
   digitalWrite(RightMotorBackward2, LOW);
 
-  delay(500);
-  
-  
-  digitalWrite(LeftMotorForward2, HIGH);
+  delay (1000);
+
+   digitalWrite(LeftMotorBackward2, LOW);
   digitalWrite(RightMotorForward2, HIGH);
-  digitalWrite(LeftMotorBackward2, LOW);
+  digitalWrite(LeftMotorForward2, HIGH);
   digitalWrite(RightMotorBackward2, LOW);
+
+  
+
   }
   
-  void turnRight(){ //Function for each wheel when turning right
+void turnRight(){ //Function for each wheel when turning right
+
+
 
   myServo.write(ANGLER);
-  digitalWrite(LeftMotorForward2, HIGH);
-  digitalWrite(RightMotorBackward2, LOW);
+  
   digitalWrite(LeftMotorBackward2, LOW);
   digitalWrite(RightMotorForward2, HIGH);
-  
-  delay(500);
-  
   digitalWrite(LeftMotorForward2, HIGH);
-  digitalWrite(RightMotorForward2, HIGH);
-  digitalWrite(LeftMotorBackward2, LOW);
   digitalWrite(RightMotorBackward2, LOW);
+
+  delay (1000);
+
+  digitalWrite(LeftMotorBackward2, LOW);
+  digitalWrite(RightMotorForward2, HIGH);
+  digitalWrite(LeftMotorForward2, HIGH);
+  digitalWrite(RightMotorBackward2, LOW);
+
+  
+
 
 }
   
