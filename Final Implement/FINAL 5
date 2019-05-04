@@ -1,4 +1,32 @@
+#include <PID_v1.h>
+#include <Servo.h>
+#include <NewPing.h>        
+
+
+const int LeftMotorForward2 = 9;
+const int LeftMotorBackward2 = 10;
+const int RightMotorForward2 = 11;
+const int RightMotorBackward2 = 12;
+int enA = 6;
+int enB = 7;
+
+//sensor pins
+#define trig_pinf A0 //analog input 1
+#define echo_pinf A1 //analog input 2
+#define trig_pinr A2
+#define echo_pinr A3
+#define trig_pinl A4
+#define echo_pinl A5
+
+//Setting up the maximum distance
+#define maximum_distance 200
+#define maximum_distancer 200
+#define maximum_distancel 200
+
+int distance = 100;
+int distanceRight = 100;
 int distanceLeft = 100;
+
 
 NewPing sonar(trig_pinf, echo_pinf, maximum_distance); //sensor function
 NewPing sonarr(trig_pinr, echo_pinr, maximum_distancer); //sensor function
@@ -33,6 +61,7 @@ void setup(){
   
   myServo.attach(5);
   myServo.write(ANGLE);
+  delay(10000);
 
   Serial.begin (9600);
 
@@ -50,13 +79,14 @@ void setup(){
   delay(100);
   distance = readPingf();
   delay(100);
-
+  distanceRight = readPingr();
+  delay(100);
+  distanceLeft = readPingl();
+  delay(100);
 
 }
 void loop(){
-  int distanceRight = 100;
-  int distanceLeft = 100;
-
+  
   delay(50);
   Input = analogRead(readPingl());
   Target = 50;
@@ -248,7 +278,8 @@ void moveForward(){ //Function for each wheel when moving forward
 
 void turnLeft(){ //Function for each wheel when turning left
 
-  myServo.write(ANGLEL);
+  myServo.write(130);
+  Serial.print("--------------- ANGLEL: ---------------------");
     
   digitalWrite(LeftMotorBackward2, LOW);
   digitalWrite(RightMotorForward2, HIGH);
@@ -270,7 +301,8 @@ void turnRight(){ //Function for each wheel when turning right
 
 
 
-  myServo.write(ANGLER);
+  myServo.write(50);
+  Serial.print("--------------- ANGLER: ---------------------");
   
   digitalWrite(LeftMotorBackward2, LOW);
   digitalWrite(RightMotorForward2, HIGH);
