@@ -278,7 +278,7 @@ void moveForward(){ //Function for each wheel when moving forward
 
 void turnLeft(){ //Function for each wheel when turning left
 
-  myServo.write(130);
+  myServo.write(ANGLEL);
   Serial.print("--------------- ANGLEL: ---------------------");
     
   digitalWrite(LeftMotorBackward2, LOW);
@@ -301,7 +301,7 @@ void turnRight(){ //Function for each wheel when turning right
 
 
 
-  myServo.write(50);
+  myServo.write(ANGLER);
   Serial.print("--------------- ANGLER: ---------------------");
   
   digitalWrite(LeftMotorBackward2, LOW);
