@@ -1,0 +1,116 @@
+int motorvoltagel = 10;
+int motor_reversel = 9;
+int motor_forwardl = 8;
+
+int motorvoltager = 7;
+int motor_reverser = 6;
+int motor_forwardr = 5;
+
+const int pushbutton = 4;
+
+int switchstate = 0;
+
+const int echopin = 3;
+const int trigpin = 2;
+
+long duration;
+int distance;
+
+
+void setup() {
+  pinMode(motor_reversel, OUTPUT);
+  pinMode(motor_forwardl, OUTPUT);
+  pinMode(motor_reverser, OUTPUT);
+  pinMode(motor_forwardr, OUTPUT);
+  
+  pinMode(trigpin, INPUT);
+  pinMode(echopin, OUTPUT);
+
+  pinMode(pushbutton, INPUT);
+  delay(5000);
+
+}
+
+void loop() {
+  //clear trig pin
+  
+  switchstate = digitalRead(pushbutton);
+
+  digitalWrite(trigpin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigpin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigpin, LOW);
+
+  duration = pulseIn(echopin, HIGH);
+
+  distance = duration*0.034/2;
+
+ // if(switchstate == HIGH){
+    forward();
+    delay(10000);
+    stopit();
+    delay(100);
+    rightturn();
+    delay(1000);
+    forward();
+    delay(4000);
+    rightturn();
+    delay(1000);
+    forward();
+    delay(4000);
+
+    if(distance <= 25){
+      stopit();
+    }
+    else{
+     forward();
+    }
+//  }
+//  else{
+//    stopit();
+//  }
+}
+
+void forward(){
+  digitalWrite(motor_forwardl, HIGH);
+  digitalWrite(motor_reversel, LOW);
+  analogWrite(motorvoltagel, 255);
+ 
+  digitalWrite(motor_forwardr, HIGH);
+  digitalWrite(motor_reverser, LOW);
+  analogWrite(motorvoltager, 255);
+  
+  }
+  
+
+void leftturn(){
+  digitalWrite(motor_forwardl, LOW);
+  digitalWrite(motor_reversel, HIGH);
+  analogWrite(motorvoltagel, 255);
+ 
+  digitalWrite(motor_forwardr, HIGH);
+  digitalWrite(motor_reverser, LOW);
+  analogWrite(motorvoltager, 255);
+  
+}
+
+void rightturn(){
+  digitalWrite(motor_forwardl, HIGH);
+  digitalWrite(motor_reversel, LOW);
+  analogWrite(motorvoltagel, 255);
+ 
+  digitalWrite(motor_forwardr, LOW);
+  digitalWrite(motor_reverser, HIGH);
+  analogWrite(motorvoltager, 255);
+  
+}
+
+void stopit(){
+  digitalWrite(motor_forwardl, LOW);
+  digitalWrite(motor_reversel, LOW);
+ 
+  digitalWrite(motor_forwardr, LOW);
+  digitalWrite(motor_reverser, LOW);
+  
+}
